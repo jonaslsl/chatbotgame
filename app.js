@@ -6,7 +6,7 @@ var basicChat = angular.module( 'BasicChat', ['appFilters'] );
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // Chat App Controller
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-basicChat.controller( 'BasicController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http) {
+basicChat.controller( 'BasicController', ['$scope', '$rootScope', '$http', '$timeout', function($scope, $rootScope, $http, $timeout) {
 
     // Sent Indicator
     $scope.status = "";
@@ -122,14 +122,13 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', '$http', funct
     //Game Core
     var events = function(){
         $scope.messages = [];
-        card = deck[rnd(9)];
+        card = deck.pop();
         show(card.event);
-        show("Suas opções são:");
+        
         $scope.options = card.options;
         // show("1 - " + card.options[0].message );
         // show("2 - " + card.options[1].message );
-
-        show("E agora?")
+        
         $rootScope.$broadcast('next-step', { callback: consequences });
 
     }
@@ -152,7 +151,10 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', '$http', funct
             }else{
                 show("Sua vida: " + $scope.dog.life );
                 show("Seu stress " + $scope.dog.stress );
-                events(); //load new event
+                $timeout(function(){
+                    events(); //load new event    
+                }, 5000);
+                $scope.options = [ { message: "" }, { message: "" } ]
             }
         }
 
