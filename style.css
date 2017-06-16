@@ -31,6 +31,8 @@ div.chat-container {
     left: 0;
     right: 0;
     overflow: hidden;
+    max-width: 500px;
+    max-height: 500px;
 }
 form.chat-input {
     position: relative;
