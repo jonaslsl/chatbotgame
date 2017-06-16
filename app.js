@@ -92,7 +92,7 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scop
     var card = null;
     var dog = races();
     dog.life = 10;
-    dog.stress = 10;
+    dog.stress = 5;
 
     //Game Core
     var events = function(){
@@ -110,11 +110,35 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scop
          
         option = $scope.option == "1" ? "0" : "1" //array position
         var f = eval(card.options[option].fn);
-        show(f(dog));
-        show("Sua vida: " + dog.life );
-        show("Seu stress " + dog.stress );
+        r = f(dog);
 
-        events();
+        if(r.end){
+            show(r.message);
+            show("Você chegou a seu destino");
+            show("(1 - Fazer xixi no chão de Marte, 2 - Rolar de felicidade e pedir carinho pros seus humanos?");
+            $rootScope.$broadcast('next-step', { callback: finish });
+        }else{
+            show(r.message)
+            if(dog.life <= 0){
+                show("Você morreu!");
+            }
+            if(dog.stress >= 10 ){
+                show("Você morreu!");   
+            }
+            show("Sua vida: " + dog.life );
+            show("Seu stress " + dog.stress );
+            events(); //load new event
+        }
+
+        
+    }
+
+    var finish = function(){
+        if($scope.option == "1"){
+            show("Parabéns, você ganhou o jogo conquistando Marte");
+        }else{
+            show("Você perdeu o jogo, sua raça está novamente submetida a raça humana");
+        }
     }
     
     //Game intro
@@ -128,10 +152,10 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scop
     var startGame = function(){
         if($scope.option == "1"){
             show("Você tem 10 pontos de vida e 5 pontos de stress. Seu objetivo é chegar ao fim do jogo e não morrer. Se sua sua vida chegar a zero você morre ou se seu stress chegar a 10 você morre também");
-            // show("Seus atributos são: ");
-            // show("Força - " + dog.attributes.force);
-            // show("Agilidade - " + dog.attributes.agility);
-            // show("Inteligência - " + dog.attributes.intelligence);
+            show("Seus atributos são: ");
+            show("Força - " + dog.force);
+            show("Agilidade - " + dog.agility);
+            show("Inteligência - " + dog.intelligence);
             show("Bora? (1 - Sim, 2 - Não)");
             $rootScope.$broadcast('next-step', { callback: events });
         }else{
