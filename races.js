@@ -6,29 +6,11 @@ function races() {
     var races = [
         { 
             name: "Poodle",
-            attributes: {
-                force: 2,
-                intelligence: 3,
-                agility: 4
-            }
-        },
-        { 
-            name: "Vira latas",
-            attributes: {
-                force: 3,
-                intelligence: 3,
-                agility: 3
-            }
-        },
-        { 
-            name: "Rottweiler",
-            attributes: {
-                force: 5,
-                intelligence: 2,
-                agility: 2
-            }
+            force: 2,
+            intelligence: 2,
+            agility: 4
         }
     ];
 
-    return races[rnd(3)];
+    return races[0];
 }
