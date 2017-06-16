@@ -17,6 +17,7 @@
     <script src="names.js"></script>
     <script src="races.js"></script>
     <script src="blames.js"></script>
+    <script src="api.js"></script>
     <script src="deck.js"></script>
     <script src="app.js"></script>
 </head>
@@ -30,7 +31,12 @@
             <div class="chat-messages">
                 <div class="chat-header">
                     <div class="angularjs-chat-logo"></div>
-                    Chat Bot Game
+                    Dog Game
+                </div>
+                <div class="status">
+                    <p>Nome: {{dog.name}}</p>
+                    <p>Life: {{dog.life}}</p>
+                    <p>Stress: {{dog.stress}}</p>
                 </div>
                 <div ng-repeat="message in messages track by $index">
 
@@ -40,20 +46,12 @@
                     </div>
 
                     <div class="clear"></div>
-
                 </div>
             </div>
-
-            <!-- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
-            <!-- User Input -->
-            <!-- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
-            <form ng-submit="send()" class="chat-input">
-                <input type="text" ng-model="textbox" autofocus>
-                <input type="submit" class="send-icon" value=" ">
-                <input type="submit" value=" "
-                    class="sent-indicator {{ status }}">
+            <form class="chat-input">
+                <a href="#" ng-click="select(1)">{{ options[0].message }}</a></br>
+                <a href="#" ng-click="select(2)">{{ options[1].message }}</a>  
             </form>
-
         </div>
     </div>
 </body>

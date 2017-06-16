@@ -6,7 +6,7 @@ var basicChat = angular.module( 'BasicChat', ['appFilters'] );
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // Chat App Controller
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scope, $rootScope) {
+basicChat.controller( 'BasicController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http) {
 
     // Sent Indicator
     $scope.status = "";
@@ -55,11 +55,12 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scop
         setTimeout(function() { 
             $scope.status = "" 
         }, 1200 );
-    
+        
     };
 
     //Read Input
     $scope.$on('input-sent', function(event, args) {
+        $scope.messages = [];
         var o = args.option;
         console.log(o);
 
@@ -70,61 +71,87 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scop
             var blame = blames();
             show(blame);
         }
-
+        
     });
-
 
     //Set next step
     $scope.$on('next-step', function(event, args) {
         var f = args.callback;
-        console.log(f);
         $scope.next = f;
     });
+
+    $scope.select = function(option){
+        $scope.messages = [];
+        console.log(option);
+        if(option == 1 || option == 2 ){
+            $scope.option = option;
+            $scope.next();
+        }else{
+            var blame = blames();
+            show(blame);
+        }     
+    }
 
    
     // $scope.$watch('option', function() {
     //     console.log($scope.option);
     // });
+
+    
     
     //Setup
     $scope.option = 0;
     $scope.next = null;
     var card = null;
-    var dog = races();
-    dog.life = 10;
-    dog.stress = 5;
+    $scope.dog = races();
+    $scope.dog.life = 10;
+    $scope.dog.stress = 5;
+    $scope.options = {};
+
+    var url = "http://192.168.1.130:3000/game_events.json"
+    var deck = [];
+
+    $http.get(url).then(function(data){
+        console.log(data);
+        deck = data.data;
+    })
+
+
+    function rnd(n) { return Math.floor(Math.random()*n) }
 
     //Game Core
     var events = function(){
-        card = deck();
+        $scope.messages = [];
+        card = deck[rnd(9)];
         show(card.event);
         show("Suas opções são:");
-        show("1 - " + card.options[0].message );
-        show("2 - " + card.options[1].message );
+        $scope.options = card.options;
+        // show("1 - " + card.options[0].message );
+        // show("2 - " + card.options[1].message );
 
         show("E agora?")
         $rootScope.$broadcast('next-step', { callback: consequences });
+
     }
 
-    var consequences = function(){
-         
-        option = $scope.option == "1" ? "0" : "1" //array position
+    var consequences = function(){ 
+        option = $scope.option == 1 ? 0 : 1 //array position
         var f = eval(card.options[option].fn);
-        r = f(dog);
+        r = f($scope.dog);
 
         if(r.end){
             show(r.message);
             show("Você chegou a seu destino");
-            show("(1 - Fazer xixi no chão de Marte, 2 - Rolar de felicidade e pedir carinho pros seus humanos?");
+            $scope.options = [ { message: "Fazer xixi no chão de Marte" }, { message: "Rolar de felicidade e pedir carinho pros seus humanos?" } ]
             $rootScope.$broadcast('next-step', { callback: finish });
         }else{
             show(r.message)
-            if(dog.life <= 0 || dog.stress >= 10){
+            if($scope.dog.life <= 0 || $scope.dog.stress >= 10){
                 show("Você morreu!");
                 end();
             }else{
-                show("Sua vida: " + dog.life );
-                show("Seu stress " + dog.stress );
+                show("Sua vida: " + $scope.dog.life );
+                show("Seu stress " + $scope.dog.stress );
                 events(); //load new event
             }
         }
@@ -133,7 +160,7 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scop
     }
 
     var finish = function(){
-        if($scope.option == "1"){
+        if($scope.option == 1){
             show("Parabéns, você ganhou o jogo conquistando Marte");
         }else{
             show("Você perdeu o jogo, sua raça está novamente submetida a raça humana");
@@ -149,17 +176,17 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scop
     var npc_name = "Bot"
     show("Olá, meu nome é " + npc_name);
     show("O ano é 2113 e os humanos precisam encontrar um novo planeta e deixar a terra. Vários países iniciam programas de busca de planetas habitáveis. Aproveitando-se os recentes avanços de transgênia neural e sua aplicação em cachorros das forças armadas, a Rússia decide reativar o programa Korabl-Sputnik, lançando os animais como cobaias para planetas. ")
-    show("Você é um cachorro da raça " + dog.name + ". Pronto pra aventura?");
-    show("(1 - Sim, 2 - Não)");
+    show("Você é um cachorro da raça " + $scope.dog.name + ". Pronto pra aventura?");
+    $scope.options = [ { message: "Sim" }, { message: "Não" } ]
 
     //Game start
     var startGame = function(){
-        if($scope.option == "1"){
+        if($scope.option == 1){
             show("Você tem 10 pontos de vida e 5 pontos de stress. Seu objetivo é chegar ao fim do jogo e não morrer. Se sua sua vida chegar a zero você morre ou se seu stress chegar a 10 você morre também");
             show("Seus atributos são: ");
-            show("Força - " + dog.force);
-            show("Agilidade - " + dog.agility);
-            show("Inteligência - " + dog.intelligence);
+            show("Força - " + $scope.dog.force);
+            show("Agilidade - " + $scope.dog.agility);
+            show("Inteligência - " + $scope.dog.intelligence);
             show("Bora? (1 - Sim, 2 - Não)");
             $rootScope.$broadcast('next-step', { callback: events });
         }else{
