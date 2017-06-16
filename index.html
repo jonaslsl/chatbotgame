@@ -10,12 +10,14 @@
     <link rel="apple-touch-icon-precomposed" href="/media/angularjs-png">
     <link rel="shortcut icon" href="/media/angularjs-png">
 
-    <title>Chat Bot Game</title>
+    <title>AngularJS Basic Chat</title>
     
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/rltm/web/rltm.js"></script>
-    <script src="bower_components/angular-chat/angular-chat.js"></script>
+    <script src="filters.js"></script>
     <script src="names.js"></script>
+    <script src="races.js"></script>
+    <script src="blames.js"></script>
+    <script src="deck.js"></script>
     <script src="app.js"></script>
 </head>
 <body>
@@ -28,11 +30,11 @@
             <div class="chat-messages">
                 <div class="chat-header">
                     <div class="angularjs-chat-logo"></div>
-                    Chat Bot Game Sample
+                    Chat Bot Game
                 </div>
-                <div ng-repeat="message in messages">
+                <div ng-repeat="message in messages track by $index">
 
-                    <div class="sent-message" ng-class="{me: message.user.name == me.name}">
+                    <div class="sent-message" ng-class="{me: message.user.name != me.name}">
                         <span class="username">{{ message.user.name }}:</span>
                         {{ message.data }}
                     </div>

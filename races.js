@@ -1,20 +1,20 @@
 // Returns a Dog Race
-function sillyname() {
+function races() {
     // Basic Random
     function rnd(n) { return Math.floor(Math.random()*n) }
 
     var races = [
         { 
             name: "Poodle",
-            attibutes: {
+            attributes: {
                 force: 2,
-                intelligence: 5,
+                intelligence: 3,
                 agility: 4
             }
         },
         { 
             name: "Vira latas",
-            attibutes: {
+            attributes: {
                 force: 3,
                 intelligence: 3,
                 agility: 3
@@ -22,7 +22,7 @@ function sillyname() {
         },
         { 
             name: "Rottweiler",
-            attibutes: {
+            attributes: {
                 force: 5,
                 intelligence: 2,
                 agility: 2

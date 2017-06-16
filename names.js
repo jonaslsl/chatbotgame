@@ -10,7 +10,7 @@ function sillyname() {
     "Greasy","Gidget","Cheesypoof","Lumpy","Wacky","Tiny","Flunky",
     "Fluffy","Zippy","Doofus","Gobsmacked","Slimy","Grimy","Salamander",
     "Dr","Burrito","Bumpy","Loopy",
-    "Snotty","Irving","Egbert"][rnd(25)] +
+    "Snotty","Irving","Egbert"][rnd(25)] + " " + 
 
     // Last Name
     ["Waffer","Lilly","Bubblegum","Sand","Fuzzy","Kitty",
