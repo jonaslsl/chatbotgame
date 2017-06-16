@@ -119,15 +119,14 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scop
             $rootScope.$broadcast('next-step', { callback: finish });
         }else{
             show(r.message)
-            if(dog.life <= 0){
+            if(dog.life <= 0 || dog.stress >= 10){
                 show("Você morreu!");
+                end();
+            }else{
+                show("Sua vida: " + dog.life );
+                show("Seu stress " + dog.stress );
+                events(); //load new event
             }
-            if(dog.stress >= 10 ){
-                show("Você morreu!");   
-            }
-            show("Sua vida: " + dog.life );
-            show("Seu stress " + dog.stress );
-            events(); //load new event
         }
 
         
@@ -139,6 +138,11 @@ basicChat.controller( 'BasicController', ['$scope', '$rootScope', function($scop
         }else{
             show("Você perdeu o jogo, sua raça está novamente submetida a raça humana");
         }
+    }
+
+    var end = function(){
+        show("O jogo acabou =/")
+        $rootScope.$broadcast('next-step', { callback: null });
     }
     
     //Game intro
